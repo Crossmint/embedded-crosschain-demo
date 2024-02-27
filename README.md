@@ -1,4 +1,4 @@
-This project demonstrates using Crossmint's embedded NFT checkout with cross-chain crypto payments. In this example ethers v5 is used to connect the browser wallet.
+This project demonstrates using Crossmint's embedded NFT checkout with cross-chain crypto payments. In this example ~ethers v5~ dynamic.xyz is used to connect the browser wallet.
 
 ## Getting Started
 
@@ -15,12 +15,14 @@ NEXT_PUBLIC_ENVIRONMENT="staging"
 Clone this repository and install dependencies:
 
 ```bash
-git clone git@github.com:Crossmint/embedded-crosschain-ethers-v5.git
+git clone git@github.com:Crossmint/embedded-crosschain-dynamic.git
 
-cd embedded-crosschain-ethers-v5
+cd embedded-crosschain-dynamic
 
 pnpm install
 ```
+
+Also, this demo is using a local copy of the SDK so be sure to open `package.json` and set that to match the path on your system.
 
 Run the app locally:
 
