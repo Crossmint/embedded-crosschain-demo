@@ -25,7 +25,7 @@ const Crossmint: React.FC = () => {
   const [orderIdentifier, setOrderIdentifier] = useState<string | null>(null);
   const [signer, setSigner] = useState<any>();
   const [address, setAddress] = useState("");
-  const [network, setNetwork] = useState<Chain>("ethereum");
+  const [network, setNetwork] = useState<Chain>("ethereum-sepolia");
   const { walletConnector } = useDynamicContext();
 
   const projectId = process.env.NEXT_PUBLIC_PROJECT_ID as string;
@@ -34,29 +34,29 @@ const Crossmint: React.FC = () => {
 
   const getChainId = (chain: string) => {
     const chains = {
-      arbitrum: 421613, // goerli
-      //arbitrum: 421614, // sepolia
+      arbitrum: 421614, // sepolia
       //arbitrum: 42161, // mainnet
-      base: 84531, // goerli
-      //base: 84532, // sepolia
+      base: 84532, // sepolia
       //base: 8453, // mainnet
-      ethereum: 5, //
-      //ethereum: 11155111, // sepolia
+      ethereum: 11155111, // sepolia
       //ethereum: 1, // mainnet
-      optimism: 420, // goerli
-      //optimism: 11155420, // sepolia
+      optimism: 11155420, // sepolia
       //optimism: 10, // mainnet
+      zora: 999999999, // sepolia
+      //zora: 7777777, // mainnet
     };
 
     switch (chain) {
-      case "arbitrum":
+      case "arbitrum-sepolia":
         return chains.arbitrum;
-      case "ethereum":
-        return chains.ethereum;
-      case "base":
+      case "base-sepolia":
         return chains.base;
-      case "optimism":
+      case "ethereum-sepolia":
+        return chains.ethereum;
+      case "optimism-sepolia":
         return chains.optimism;
+      case "zora-sepolia":
+        return chains.zora;
     }
   };
 
@@ -65,7 +65,7 @@ const Crossmint: React.FC = () => {
       try {
         const _signer = await walletConnector?.getSigner();
 
-        console.log(_signer);
+        console.log("signer: ", _signer);
         const _address = await walletConnector?.fetchPublicAddress();
         setSigner(_signer);
         setAddress(_address || "");
@@ -78,7 +78,7 @@ const Crossmint: React.FC = () => {
   }, [walletConnector]);
 
   if (
-    signer == null ||
+    !signer ||
     !address ||
     !["EVM", "ETH"].includes(walletConnector?.connectedChain || "")
   ) {
@@ -106,12 +106,21 @@ const Crossmint: React.FC = () => {
                 return signRes.hash;
               },
               handleChainSwitch: async (chain) => {
+                console.log("chain: ", chain);
+                const chainTest = getChainId(chain);
+                console.log("chainId:", chainTest);
                 await walletConnector!.switchNetwork({
                   networkChainId: getChainId(chain),
                 });
                 setNetwork(chain);
               },
-              supportedChains: ["arbitrum", "ethereum", "optimism", "base"],
+              supportedChains: [
+                "arbitrum-sepolia",
+                "base-sepolia",
+                "ethereum-sepolia",
+                "optimism-sepolia",
+                "zora-sepolia",
+              ],
               chain: network,
             }}
             mintConfig={{
