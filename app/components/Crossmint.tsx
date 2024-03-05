@@ -2,63 +2,35 @@
 
 import React, { useState, useEffect } from "react";
 import { CrossmintPaymentElement } from "@crossmint/client-sdk-react-ui";
-//import { DynamicWidget, useDynamicContext } from "@dynamic-labs/sdk-react-core";
+import { EVMBlockchainIncludingTestnet as Blockchain } from "@crossmint/common-sdk-base";
+//import { DynamicWidget, useDynamicContext } from "@dynamic-labs/sdk-react-core"; // newer version of dynamic
 import { DynamicWidget, useDynamicContext } from "@dynamic-labs/sdk-react";
 import Minting from "./Minting";
 
-type Chain =
-  | "base"
-  | "polygon"
-  | "solana"
-  | "cardano"
-  | "sui"
-  | "ethereum"
-  | "ethereum-sepolia"
-  | "bsc"
-  | "optimism"
-  | "arbitrum"
-  | "zora"
-  | "arbitrumnova"
-  | "zkatana";
+type PaymentMethod = "ETH" | "SOL" | "fiat";
 
-const Crossmint: React.FC = () => {
-  const [orderIdentifier, setOrderIdentifier] = useState<string | null>(null);
+interface CrossmintProps {
+  collectionId: string;
+  collectionChain: string;
+  minting: boolean;
+  setMinting: Function;
+}
+
+const Crossmint: React.FC<CrossmintProps> = ({
+  collectionId,
+  collectionChain,
+  minting,
+  setMinting,
+}) => {
+  const [orderIdentifier, setOrderIdentifier] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("ETH");
   const [signer, setSigner] = useState<any>();
   const [address, setAddress] = useState("");
-  const [network, setNetwork] = useState<Chain>("ethereum-sepolia");
+  const [network, setNetwork] = useState<Blockchain>("ethereum-sepolia");
+
   const { walletConnector } = useDynamicContext();
-
   const projectId = process.env.NEXT_PUBLIC_PROJECT_ID as string;
-  const collectionId = process.env.NEXT_PUBLIC_COLLECTION_ID as string;
   const environment = process.env.NEXT_PUBLIC_ENVIRONMENT as string;
-
-  const getChainId = (chain: string) => {
-    const chains = {
-      arbitrum: 421614, // sepolia
-      //arbitrum: 42161, // mainnet
-      base: 84532, // sepolia
-      //base: 8453, // mainnet
-      ethereum: 11155111, // sepolia
-      //ethereum: 1, // mainnet
-      optimism: 11155420, // sepolia
-      //optimism: 10, // mainnet
-      zora: 999999999, // sepolia
-      //zora: 7777777, // mainnet
-    };
-
-    switch (chain) {
-      case "arbitrum-sepolia":
-        return chains.arbitrum;
-      case "base-sepolia":
-        return chains.base;
-      case "ethereum-sepolia":
-        return chains.ethereum;
-      case "optimism-sepolia":
-        return chains.optimism;
-      case "zora-sepolia":
-        return chains.zora;
-    }
-  };
 
   useEffect(() => {
     async function getWalletSigner() {
@@ -77,71 +49,176 @@ const Crossmint: React.FC = () => {
     getWalletSigner();
   }, [walletConnector]);
 
-  if (
-    !signer ||
-    !address ||
-    !["EVM", "ETH"].includes(walletConnector?.connectedChain || "")
-  ) {
-    return (
-      <p className="mt-2 text-s">
-        Connect your ETH(Testnet) wallet to proceed.
-      </p>
-    );
-  }
+  const getButtonClass = (method: PaymentMethod) => {
+    let baseClass =
+      "flex items-center justify-center bg-gray-100 px-5 py-2 shadow-sm hover:shadow-lg rounded cursor-pointer transition-shadow duration-200 border-solid border-2";
+    if (method === paymentMethod) {
+      baseClass += " border-indigo-500";
+    }
+    return baseClass;
+  };
+
+  const getChainId = (chain: string) => {
+    switch (chain) {
+      case "arbitrum-sepolia":
+        return 421614;
+      case "base-sepolia":
+        return 84532;
+      case "ethereum-sepolia":
+        return 11155111;
+      case "optimism-sepolia":
+        return 1155420;
+      case "zora-sepolia":
+        return 999999999;
+    }
+  };
+
+  const handlePaymentEvent = (event: any) => {
+    switch (event.type) {
+      case "crypto-payment:user-accepted":
+        break;
+
+      case "payment:process.started":
+        break;
+
+      case "payment:process.succeeded":
+        console.log(event);
+        setOrderIdentifier(event.payload.orderIdentifier);
+        break;
+      default:
+        console.log(event);
+        break;
+    }
+  };
 
   return (
     <>
       <div className="sm:col-span-3">
-        <DynamicWidget />
-        {orderIdentifier === null ? (
-          <CrossmintPaymentElement
-            projectId={projectId}
-            collectionId={collectionId}
-            environment={environment}
-            paymentMethod="ETH"
-            signer={{
-              address: address,
-              signAndSendTransaction: async (transaction) => {
-                const signRes = await signer.sendTransaction(transaction);
-                return signRes.hash;
-              },
-              handleChainSwitch: async (chain) => {
-                console.log("chain: ", chain);
-                const chainTest = getChainId(chain);
-                console.log("chainId:", chainTest);
-                await walletConnector!.switchNetwork({
-                  networkChainId: getChainId(chain),
-                });
-                setNetwork(chain);
-              },
-              supportedChains: [
-                "arbitrum-sepolia",
-                "base-sepolia",
-                "ethereum-sepolia",
-                "optimism-sepolia",
-                "zora-sepolia",
-              ],
-              chain: network,
-            }}
-            mintConfig={{
-              type: "erc-721",
-              totalPrice: "0.001",
-              _quantity: "1",
-            }}
-            onEvent={(event) => {
-              switch (event.type) {
-                case "payment:process.succeeded":
-                  console.log(event);
-                  setOrderIdentifier(event.payload.orderIdentifier);
-                  break;
-                default:
-                  console.log(event);
-                  break;
-              }
-            }}
-          />
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          <button
+            onClick={() => setPaymentMethod("ETH")}
+            className={getButtonClass("ETH")}
+          >
+            ETH
+          </button>
+          {/* <button
+            onClick={() => setPaymentMethod("SOL")}
+            className={getButtonClass("SOL")}
+          >
+            SOL
+          </button> */}
+          <button
+            onClick={() => setPaymentMethod("fiat")}
+            className={getButtonClass("fiat")}
+          >
+            Credit Card
+          </button>
+        </div>
+
+        {!orderIdentifier ? (
+          paymentMethod === "ETH" ? (
+            <div className="loading-bg">
+              <div className="loading-spinner" />
+              <div className="payment-wrapper">
+                <DynamicWidget />
+                <CrossmintPaymentElement
+                  key={collectionId}
+                  projectId={projectId}
+                  collectionId={collectionId}
+                  environment={environment}
+                  paymentMethod="ETH"
+                  signer={{
+                    address: address,
+                    signAndSendTransaction: async (transaction) => {
+                      const signRes = await signer.sendTransaction(transaction);
+                      return signRes.hash;
+                    },
+                    handleChainSwitch: async (chain) => {
+                      console.log("handlechainswitch chain: ", chain);
+                      await walletConnector!.switchNetwork({
+                        networkChainId: getChainId(chain),
+                      });
+                      setNetwork(chain);
+                    },
+                    supportedChains: [
+                      "arbitrum-sepolia",
+                      "base-sepolia",
+                      "ethereum-sepolia",
+                      "optimism-sepolia",
+                    ],
+                    chain: network,
+                  }}
+                  mintConfig={{
+                    type: "erc-721",
+                    totalPrice: "0.0001",
+                  }}
+                  uiConfig={{
+                    colors: {
+                      textLink: "green",
+                    },
+                  }}
+                  onEvent={handlePaymentEvent}
+                />
+              </div>
+            </div>
+          ) : paymentMethod === "SOL" ? (
+            <div className="loading-bg">
+              <div className="loading-spinner" />
+              <div className="payment-wrapper">
+                <CrossmintPaymentElement
+                  key={collectionId}
+                  projectId={projectId}
+                  collectionId={collectionId}
+                  environment={environment}
+                  paymentMethod="SOL"
+                  signer={{
+                    address: address,
+                    signAndSendTransaction: async (transaction) => {
+                      const signRes = await signer.sendTransaction(transaction);
+                      return signRes.hash;
+                    },
+                  }}
+                  mintConfig={{
+                    type: "erc-721",
+                    totalPrice: "0.0001",
+                  }}
+                  uiConfig={{
+                    colors: {
+                      textLink: "green",
+                    },
+                  }}
+                  onEvent={handlePaymentEvent}
+                />
+              </div>
+            </div>
+          ) : paymentMethod === "fiat" ? (
+            <div className="loading-bg">
+              <div className="loading-spinner" />
+              <div className="payment-wrapper">
+                <CrossmintPaymentElement
+                  key={collectionId}
+                  projectId={projectId}
+                  collectionId={collectionId}
+                  environment={environment}
+                  emailInputOptions={{
+                    show: true,
+                  }}
+                  mintConfig={{
+                    type: "erc-721",
+                    totalPrice: "0.0001",
+                  }}
+                  uiConfig={{
+                    colors: {
+                      textLink: "green",
+                    },
+                  }}
+                  onEvent={handlePaymentEvent}
+                />
+              </div>
+            </div>
+          ) : null
         ) : (
-          <Minting orderIdentifier={orderIdentifier} />
+          <Minting orderIdentifier={orderIdentifier} chain={collectionChain} />
         )}
       </div>
     </>

@@ -1,12 +1,14 @@
 import React from "react";
 import Image from "next/image";
 import { useCrossmintEvents } from "@crossmint/client-sdk-react-ui";
+import { OpenSeaButton, ScannerButton, CrossmintButton } from "./NFTButtons";
 
 interface MintingProps {
   orderIdentifier: string;
+  chain: string;
 }
 
-const Minting: React.FC<MintingProps> = ({ orderIdentifier }) => {
+const Minting: React.FC<MintingProps> = ({ orderIdentifier, chain }) => {
   const [status, setStatus] = React.useState<string>("pending"); // ["pending", "success", "failure"]
   const [result, setResult] = React.useState<any>(null);
   const environment = process.env.NEXT_PUBLIC_ENVIRONMENT as string;
@@ -44,27 +46,15 @@ const Minting: React.FC<MintingProps> = ({ orderIdentifier }) => {
               className="shrink mx-auto mt-10"
               alt="processing animation"
             />
-            This may take up to a few minutes
+            This will take about a minute.
           </>
         )}
         {status === "success" && (
           <>
             <h3>NFT Minted Successfully!</h3>
             <div className="mt-10">
-              <a
-                target="_blank"
-                className="block bg-[#2081e2] rounded-lg mt-3 p-3 text-white"
-                href={`https://testnets.opensea.io/assets/mumbai/${result?.contractAddress}/${result?.tokenIds[0]}`}
-              >
-                View on OpenSea
-              </a>
-              <a
-                target="_blank"
-                className="block bg-[#663399] rounded-lg mt-3 p-3 text-white"
-                href={`https://mumbai.polygonscan.com/tx/${result?.txId}`}
-              >
-                View on Polygonscan
-              </a>
+              <OpenSeaButton env={environment} chain={chain} token={result} />
+              <ScannerButton env={environment} chain={chain} token={result} />
             </div>
           </>
         )}
