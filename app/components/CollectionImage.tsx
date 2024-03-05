@@ -13,8 +13,8 @@ const CollectionImage: React.FC<CollectionImageProps> = ({
     switch (chain) {
       case "solana":
         return "/solana-coin.jpg";
-      case "ethereum":
-        return "/ethereum-coin.jpg";
+      case "base":
+        return "/base-coin.jpg";
       case "polygon":
         return "/polygon-coin.jpg";
       default:

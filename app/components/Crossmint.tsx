@@ -3,8 +3,14 @@
 import React, { useState, useEffect } from "react";
 import { CrossmintPaymentElement } from "@crossmint/client-sdk-react-ui";
 import { EVMBlockchainIncludingTestnet as Blockchain } from "@crossmint/common-sdk-base";
-//import { DynamicWidget, useDynamicContext } from "@dynamic-labs/sdk-react-core"; // newer version of dynamic
-import { DynamicWidget, useDynamicContext } from "@dynamic-labs/sdk-react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import {
+  useAccount,
+  useChainId,
+  useSwitchChain,
+  useSendTransaction,
+  useWaitForTransactionReceipt,
+} from "wagmi";
 import Minting from "./Minting";
 
 type PaymentMethod = "ETH" | "SOL" | "fiat";
@@ -24,30 +30,9 @@ const Crossmint: React.FC<CrossmintProps> = ({
 }) => {
   const [orderIdentifier, setOrderIdentifier] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("ETH");
-  const [signer, setSigner] = useState<any>();
-  const [address, setAddress] = useState("");
-  const [network, setNetwork] = useState<Blockchain>("ethereum-sepolia");
 
-  const { walletConnector } = useDynamicContext();
   const projectId = process.env.NEXT_PUBLIC_PROJECT_ID as string;
   const environment = process.env.NEXT_PUBLIC_ENVIRONMENT as string;
-
-  useEffect(() => {
-    async function getWalletSigner() {
-      try {
-        const _signer = await walletConnector?.getSigner();
-
-        console.log("signer: ", _signer);
-        const _address = await walletConnector?.fetchPublicAddress();
-        setSigner(_signer);
-        setAddress(_address || "");
-      } catch (error) {
-        console.error("Error getting Ethereum signer:", error);
-      }
-    }
-
-    getWalletSigner();
-  }, [walletConnector]);
 
   const getButtonClass = (method: PaymentMethod) => {
     let baseClass =
@@ -58,27 +43,23 @@ const Crossmint: React.FC<CrossmintProps> = ({
     return baseClass;
   };
 
-  const getChainId = (chain: string) => {
-    switch (chain) {
-      case "arbitrum-sepolia":
-        return 421614;
-      case "base-sepolia":
-        return 84532;
-      case "ethereum-sepolia":
-        return 11155111;
-      case "optimism-sepolia":
-        return 1155420;
-      case "zora-sepolia":
-        return 999999999;
-    }
+  const chainIdMap = {
+    "arbitrum-sepolia": 421614,
+    "base-sepolia": 84532,
+    "ethereum-sepolia": 11155111,
+    "optimism-sepolia": 1155420,
+    "zora-sepolia": 999999999,
   };
 
   const handlePaymentEvent = (event: any) => {
     switch (event.type) {
       case "crypto-payment:user-accepted":
+        console.log("crypto-payment:user-accepted", event);
         break;
 
       case "payment:process.started":
+        console.log("payment:process.started", event);
+
         break;
 
       case "payment:process.succeeded":
@@ -90,6 +71,11 @@ const Crossmint: React.FC<CrossmintProps> = ({
         break;
     }
   };
+
+  const signer = useAccount();
+  const chainId = useChainId();
+  const { switchChain } = useSwitchChain();
+  const { data: hash, sendTransactionAsync } = useSendTransaction();
 
   return (
     <>
@@ -120,7 +106,13 @@ const Crossmint: React.FC<CrossmintProps> = ({
             <div className="loading-bg">
               <div className="loading-spinner" />
               <div className="payment-wrapper">
-                <DynamicWidget />
+                <div className="connect-wrapper my-5">
+                  <ConnectButton
+                    showBalance={false}
+                    chainStatus="none"
+                    accountStatus="full"
+                  />
+                </div>
                 <CrossmintPaymentElement
                   key={collectionId}
                   projectId={projectId}
@@ -128,17 +120,19 @@ const Crossmint: React.FC<CrossmintProps> = ({
                   environment={environment}
                   paymentMethod="ETH"
                   signer={{
-                    address: address,
+                    address: signer?.address || "",
                     signAndSendTransaction: async (transaction) => {
-                      const signRes = await signer.sendTransaction(transaction);
-                      return signRes.hash;
+                      return await sendTransactionAsync({
+                        to: transaction.to as `0x${string}`,
+                        value: BigInt(transaction.value.toString()),
+                        data: transaction.data as `0x${string}`,
+                      });
                     },
                     handleChainSwitch: async (chain) => {
                       console.log("handlechainswitch chain: ", chain);
-                      await walletConnector!.switchNetwork({
-                        networkChainId: getChainId(chain),
+                      switchChain({
+                        chainId: chainIdMap[chain as keyof typeof chainIdMap],
                       });
-                      setNetwork(chain);
                     },
                     supportedChains: [
                       "arbitrum-sepolia",
@@ -146,7 +140,10 @@ const Crossmint: React.FC<CrossmintProps> = ({
                       "ethereum-sepolia",
                       "optimism-sepolia",
                     ],
-                    chain: network,
+                    chain: Object.keys(chainIdMap).find(
+                      (key) =>
+                        chainIdMap[key as keyof typeof chainIdMap] === chainId
+                    ) as Blockchain | undefined,
                   }}
                   mintConfig={{
                     type: "erc-721",

@@ -1,5 +1,5 @@
 {
-  "name": "crossmint-embedded-demo",
+  "name": "crossmint-embedded-rainbow",
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
@@ -12,22 +12,24 @@
   "dependencies": {
     "@crossmint/client-sdk-react-ui": "1.1.5",
     "@crossmint/common-sdk-base": "^0.0.6",
-    "@dynamic-labs/ethereum-all": "^0.18.30",
-    "@dynamic-labs/sdk-react": "^0.18.28",
-    "@types/node": "20.5.2",
-    "@types/react": "18.2.20",
-    "@types/react-dom": "18.2.7",
-    "autoprefixer": "10.4.15",
-    "eslint": "8.47.0",
-    "eslint-config-next": "14.1.1",
+    "@rainbow-me/rainbowkit": "^2.0.1",
+    "@tanstack/react-query": "^5.24.8",
     "next": "14.1.1",
-    "postcss": "8.4.28",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tailwindcss": "3.3.3",
-    "typescript": "5.1.6"
+    "typescript": "5.1.6",
+    "viem": "2.x",
+    "wagmi": "^2.5.7"
   },
   "devDependencies": {
+    "autoprefixer": "10.4.15",
+    "eslint": "8.47.0",
+    "eslint-config-next": "14.1.1",
+    "postcss": "8.4.28",
+    "@types/node": "20.5.2",
+    "@types/react": "18.2.20",
+    "@types/react-dom": "18.2.7",
     "@types/ws": "^8.5.10"
   }
 }
