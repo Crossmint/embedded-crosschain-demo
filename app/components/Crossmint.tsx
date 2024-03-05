@@ -167,14 +167,14 @@ const Crossmint: React.FC<CrossmintProps> = ({
                   projectId={projectId}
                   collectionId={collectionId}
                   environment={environment}
-                  paymentMethod="SOL"
-                  signer={{
-                    address: address,
-                    signAndSendTransaction: async (transaction) => {
-                      const signRes = await signer.sendTransaction(transaction);
-                      return signRes.hash;
-                    },
-                  }}
+                  // paymentMethod="SOL"
+                  // signer={{
+                  //   address: address,
+                  //   signAndSendTransaction: async (transaction) => {
+                  //     const signRes = await signer.sendTransaction(transaction);
+                  //     return signRes.hash;
+                  //   },
+                  // }}
                   mintConfig={{
                     type: "erc-721",
                     totalPrice: "0.0001",
