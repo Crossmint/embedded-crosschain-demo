@@ -46,6 +46,13 @@ body {
   transform: translate(-50%, -50%);
   z-index: 1;
 }
+.loading-message {
+  position: absolute;
+  top: 25%;
+  text-align: center;
+  width: 100%;
+  color: #999;
+}
 .loading-bg {
   position: relative;
   overflow: hidden;

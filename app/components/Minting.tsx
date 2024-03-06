@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { useCrossmintEvents } from "@crossmint/client-sdk-react-ui";
-import { OpenSeaButton, ScannerButton } from "./NFTButtons";
+import { OpenSeaButton, ScannerButton, RestartButton } from "./NFTButtons";
 
 interface MintingProps {
   orderIdentifier: string;
@@ -56,6 +56,7 @@ const Minting: React.FC<MintingProps> = ({ orderIdentifier, chain }) => {
               <div className="mt-10">
                 <OpenSeaButton env={environment} chain={chain} token={result} />
                 <ScannerButton env={environment} chain={chain} token={result} />
+                <RestartButton />
               </div>
             </>
           )}

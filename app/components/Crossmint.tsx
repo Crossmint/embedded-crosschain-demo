@@ -114,8 +114,8 @@ const Crossmint: React.FC<CrossmintProps> = ({
               </div>
               {account.address ? (
                 <div className="loading-bg">
+                  <div className="loading-message">Loading Checkout...</div>
                   <div className="loading-spinner" />
-
                   <div className="payment-wrapper">
                     <CrossmintPaymentElement
                       key={collectionId}
@@ -171,6 +171,7 @@ const Crossmint: React.FC<CrossmintProps> = ({
             </>
           ) : paymentMethod === "fiat" ? (
             <div className="loading-bg">
+              <div className="loading-message">Loading Checkout...</div>
               <div className="loading-spinner" />
               <div className="payment-wrapper">
                 <CrossmintPaymentElement

@@ -68,16 +68,12 @@ const ScannerButton: React.FC<ButtonProps> = ({ env, chain, token }) => {
   );
 };
 
-const CrossmintButton: React.FC<ButtonProps> = ({ env, chain, token }) => {
+const RestartButton: React.FC = () => {
   return (
-    <a
-      target="_blank"
-      className="block bg-[#663399] rounded-lg mt-3 p-3 text-white"
-      href={`https://mumbai.polygonscan.com/tx/${token?.txId}`}
-    >
-      View on Polygonscan
+    <a className="block bg-[#98ff98] rounded-lg mt-3 p-3 text-black" href="/">
+      Reset and Start Over
     </a>
   );
 };
 
-export { OpenSeaButton, ScannerButton, CrossmintButton };
+export { OpenSeaButton, ScannerButton, RestartButton };
