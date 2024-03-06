@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Navigation from "./components/Navigation";
 import CollectionInfo from "./components/CollectionInfo";
 import Crossmint from "./components/Crossmint";
+import Footer from "./components/Footer";
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { WagmiProvider } from "wagmi";
@@ -64,6 +65,7 @@ const Page: React.FC = () => {
               />
             </div>
           </div>
+          <Footer />
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>

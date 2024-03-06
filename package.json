@@ -12,6 +12,10 @@
   "dependencies": {
     "@crossmint/client-sdk-react-ui": "1.1.5",
     "@crossmint/common-sdk-base": "^0.0.6",
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-brands-svg-icons": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@rainbow-me/rainbowkit": "^2.0.1",
     "@tanstack/react-query": "^5.24.8",
     "next": "14.1.1",
@@ -23,13 +27,13 @@
     "wagmi": "^2.5.7"
   },
   "devDependencies": {
-    "autoprefixer": "10.4.15",
-    "eslint": "8.47.0",
-    "eslint-config-next": "14.1.1",
-    "postcss": "8.4.28",
     "@types/node": "20.5.2",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
-    "@types/ws": "^8.5.10"
+    "@types/ws": "^8.5.10",
+    "autoprefixer": "10.4.15",
+    "eslint": "8.47.0",
+    "eslint-config-next": "14.1.1",
+    "postcss": "8.4.28"
   }
 }
