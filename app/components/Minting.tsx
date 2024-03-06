@@ -41,7 +41,7 @@ const Minting: React.FC<MintingProps> = ({ orderIdentifier, chain }) => {
             <>
               <h3>Minting your NFT...</h3>
               <Image
-                src="/assets/sphere.gif"
+                src="/sphere.gif"
                 width={256}
                 height={256}
                 className="shrink mx-auto mt-10"
