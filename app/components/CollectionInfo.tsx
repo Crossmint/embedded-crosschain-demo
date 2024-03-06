@@ -28,10 +28,9 @@ const CollectionInfo: React.FC<CollectionInfoProps> = ({
   return (
     <>
       <div className="sm:col-span-3 flex flex-col space-3">
-        <h2>
-          Test out crosschain payments. This demo allows you to mint from three
-          different collections. Pick a chain below to get started.{" "}
-        </h2>
+        <div className="my-5">
+          <strong>Step 1 - </strong> Pick a chain to mint an NFT on ↓
+        </div>
         <div className="grid grid-cols-3 gap-2 mb-4">
           <button
             onClick={() => onCollectionSelect("solana")}

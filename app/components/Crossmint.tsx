@@ -72,7 +72,7 @@ const Crossmint: React.FC<CrossmintProps> = ({
     }
   };
 
-  const signer = useAccount();
+  const account = useAccount();
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
   const { data: hash, sendTransactionAsync } = useSendTransaction();
@@ -103,91 +103,71 @@ const Crossmint: React.FC<CrossmintProps> = ({
 
         {!orderIdentifier ? (
           paymentMethod === "ETH" ? (
-            <div className="loading-bg">
-              <div className="loading-spinner" />
-              <div className="payment-wrapper">
-                <div className="connect-wrapper my-5">
-                  <ConnectButton
-                    showBalance={false}
-                    chainStatus="none"
-                    accountStatus="full"
-                  />
+            <>
+              <div className="connect-wrapper my-5">
+                <ConnectButton
+                  showBalance={false}
+                  chainStatus="none"
+                  accountStatus="full"
+                />
+              </div>
+              {account.address ? (
+                <div className="loading-bg">
+                  <div className="loading-spinner" />
+
+                  <div className="payment-wrapper">
+                    <CrossmintPaymentElement
+                      key={collectionId}
+                      projectId={projectId}
+                      collectionId={collectionId}
+                      environment={environment}
+                      paymentMethod="ETH"
+                      signer={{
+                        address: account?.address || "",
+                        signAndSendTransaction: async (transaction) => {
+                          return await sendTransactionAsync({
+                            to: transaction.to as `0x${string}`,
+                            value: BigInt(transaction.value.toString()),
+                            data: transaction.data as `0x${string}`,
+                          });
+                        },
+                        handleChainSwitch: async (chain) => {
+                          console.log("handlechainswitch chain: ", chain);
+                          switchChain({
+                            chainId:
+                              chainIdMap[chain as keyof typeof chainIdMap],
+                          });
+                        },
+                        supportedChains: [
+                          "arbitrum-sepolia",
+                          "base-sepolia",
+                          "ethereum-sepolia",
+                          "optimism-sepolia",
+                        ],
+                        chain: Object.keys(chainIdMap).find(
+                          (key) =>
+                            chainIdMap[key as keyof typeof chainIdMap] ===
+                            chainId
+                        ) as Blockchain | undefined,
+                      }}
+                      mintConfig={{
+                        type: "erc-721",
+                        totalPrice: "0.0001",
+                      }}
+                      uiConfig={{
+                        colors: {
+                          textLink: "green",
+                          backgroundSecondary: "white",
+                        },
+                      }}
+                      onEvent={handlePaymentEvent}
+                    />
+                  </div>
                 </div>
-                <CrossmintPaymentElement
-                  key={collectionId}
-                  projectId={projectId}
-                  collectionId={collectionId}
-                  environment={environment}
-                  paymentMethod="ETH"
-                  signer={{
-                    address: signer?.address || "",
-                    signAndSendTransaction: async (transaction) => {
-                      return await sendTransactionAsync({
-                        to: transaction.to as `0x${string}`,
-                        value: BigInt(transaction.value.toString()),
-                        data: transaction.data as `0x${string}`,
-                      });
-                    },
-                    handleChainSwitch: async (chain) => {
-                      console.log("handlechainswitch chain: ", chain);
-                      switchChain({
-                        chainId: chainIdMap[chain as keyof typeof chainIdMap],
-                      });
-                    },
-                    supportedChains: [
-                      "arbitrum-sepolia",
-                      "base-sepolia",
-                      "ethereum-sepolia",
-                      "optimism-sepolia",
-                    ],
-                    chain: Object.keys(chainIdMap).find(
-                      (key) =>
-                        chainIdMap[key as keyof typeof chainIdMap] === chainId
-                    ) as Blockchain | undefined,
-                  }}
-                  mintConfig={{
-                    type: "erc-721",
-                    totalPrice: "0.0001",
-                  }}
-                  uiConfig={{
-                    colors: {
-                      textLink: "green",
-                    },
-                  }}
-                  onEvent={handlePaymentEvent}
-                />
-              </div>
-            </div>
-          ) : paymentMethod === "SOL" ? (
-            <div className="loading-bg">
-              <div className="loading-spinner" />
-              <div className="payment-wrapper">
-                <CrossmintPaymentElement
-                  key={collectionId}
-                  projectId={projectId}
-                  collectionId={collectionId}
-                  environment={environment}
-                  // paymentMethod="SOL"
-                  // signer={{
-                  //   address: address,
-                  //   signAndSendTransaction: async (transaction) => {
-                  //     const signRes = await signer.sendTransaction(transaction);
-                  //     return signRes.hash;
-                  //   },
-                  // }}
-                  mintConfig={{
-                    type: "erc-721",
-                    totalPrice: "0.0001",
-                  }}
-                  uiConfig={{
-                    colors: {
-                      textLink: "green",
-                    },
-                  }}
-                  onEvent={handlePaymentEvent}
-                />
-              </div>
-            </div>
+              ) : (
+                <div>You must connect a wallet first</div>
+              )}
+            </>
           ) : paymentMethod === "fiat" ? (
             <div className="loading-bg">
               <div className="loading-spinner" />
@@ -200,6 +180,7 @@ const Crossmint: React.FC<CrossmintProps> = ({
                   emailInputOptions={{
                     show: true,
                   }}
+                  paymentMethod="fiat"
                   mintConfig={{
                     type: "erc-721",
                     totalPrice: "0.0001",
@@ -214,9 +195,8 @@ const Crossmint: React.FC<CrossmintProps> = ({
               </div>
             </div>
           ) : null
-        ) : (
-          <Minting orderIdentifier={orderIdentifier} chain={collectionChain} />
-        )}
+        ) : null}
+        <Minting orderIdentifier={orderIdentifier} chain={collectionChain} />
       </div>
     </>
   );

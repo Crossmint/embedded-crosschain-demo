@@ -16,7 +16,7 @@ const Minting: React.FC<MintingProps> = ({ orderIdentifier, chain }) => {
     environment: environment,
   });
 
-  if (status === "pending") {
+  if (orderIdentifier && status === "pending") {
     listenToMintingEvents({ orderIdentifier }, (event) => {
       switch (event.type) {
         case "transaction:fulfillment.succeeded":
@@ -35,39 +35,41 @@ const Minting: React.FC<MintingProps> = ({ orderIdentifier, chain }) => {
 
   return (
     <>
-      <div className="text-black font-mono p-5 text-center">
-        {status === "pending" && (
-          <>
-            <h3>Minting your NFT...</h3>
-            <Image
-              src="/assets/sphere.gif"
-              width={256}
-              height={256}
-              className="shrink mx-auto mt-10"
-              alt="processing animation"
-            />
-            This will take about a minute.
-          </>
-        )}
-        {status === "success" && (
-          <>
-            <h3>NFT Minted Successfully!</h3>
-            <div className="mt-10">
-              <OpenSeaButton env={environment} chain={chain} token={result} />
-              <ScannerButton env={environment} chain={chain} token={result} />
-            </div>
-          </>
-        )}
-        {status === "failure" && (
-          <>
-            <h3>Failed to Mint NFT</h3>
-            <p>
-              Something went wrong. You will be refunded if the mint cannot be
-              fulfilled successfully.
-            </p>
-          </>
-        )}
-      </div>
+      {orderIdentifier ? (
+        <div className="text-black font-mono p-5 text-center">
+          {status === "pending" && (
+            <>
+              <h3>Minting your NFT...</h3>
+              <Image
+                src="/assets/sphere.gif"
+                width={256}
+                height={256}
+                className="shrink mx-auto mt-10"
+                alt="processing animation"
+              />
+              This will take about a minute.
+            </>
+          )}
+          {status === "success" && (
+            <>
+              <h3>NFT Minted Successfully!</h3>
+              <div className="mt-10">
+                <OpenSeaButton env={environment} chain={chain} token={result} />
+                <ScannerButton env={environment} chain={chain} token={result} />
+              </div>
+            </>
+          )}
+          {status === "failure" && (
+            <>
+              <h3>Failed to Mint NFT</h3>
+              <p>
+                Something went wrong. You will be refunded if the mint cannot be
+                fulfilled successfully.
+              </p>
+            </>
+          )}
+        </div>
+      ) : null}
     </>
   );
 };
