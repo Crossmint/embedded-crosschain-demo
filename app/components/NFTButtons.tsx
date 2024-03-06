@@ -39,7 +39,7 @@ const ScannerButton: React.FC<ButtonProps> = ({ env, chain, token }) => {
   switch (chain) {
     case "solana":
       const network = env === "staging" ? "devnet" : "mainnet";
-      scannerLink = `https://xray.helius.xyz/token/${token?.txId}?network=${network}`;
+      scannerLink = `https://xray.helius.xyz/tx/${token?.txId}?network=${network}`;
       label = "XRAY";
       color = "#ef7235";
       break;
