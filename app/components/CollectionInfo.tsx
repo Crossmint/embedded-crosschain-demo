@@ -22,6 +22,9 @@ const CollectionInfo: React.FC<CollectionInfoProps> = ({
     if (chain === collectionChain) {
       baseClass += " border-indigo-500"; // Add your active class here
     }
+    if (minting) {
+      baseClass += " opacity-50 cursor-not-allowed";
+    }
     return baseClass;
   };
 
@@ -35,18 +38,21 @@ const CollectionInfo: React.FC<CollectionInfoProps> = ({
           <button
             onClick={() => onCollectionSelect("solana")}
             className={getButtonClass("solana")}
+            disabled={minting}
           >
             <SolanaFull />
           </button>
           <button
             onClick={() => onCollectionSelect("base")}
             className={getButtonClass("base")}
+            disabled={minting}
           >
             <BaseFull />
           </button>
           <button
             onClick={() => onCollectionSelect("polygon")}
             className={getButtonClass("polygon")}
+            disabled={minting}
           >
             <PolygonFull />
           </button>

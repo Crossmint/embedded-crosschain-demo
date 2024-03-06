@@ -17,8 +17,8 @@ import {
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 const config = getDefaultConfig({
-  appName: "My RainbowKit App",
-  projectId: "YOUR_PROJECT_ID",
+  appName: "Crossmint Crosschain Demo",
+  projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_ID || "",
   chains: [sepolia, baseSepolia, optimismSepolia, arbitrumSepolia, zoraSepolia],
   ssr: true,
 });

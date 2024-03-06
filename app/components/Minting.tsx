@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { useCrossmintEvents } from "@crossmint/client-sdk-react-ui";
-import { OpenSeaButton, ScannerButton, CrossmintButton } from "./NFTButtons";
+import { OpenSeaButton, ScannerButton } from "./NFTButtons";
 
 interface MintingProps {
   orderIdentifier: string;
@@ -9,7 +9,7 @@ interface MintingProps {
 }
 
 const Minting: React.FC<MintingProps> = ({ orderIdentifier, chain }) => {
-  const [status, setStatus] = React.useState<string>("pending"); // ["pending", "success", "failure"]
+  const [status, setStatus] = React.useState<string>("pending");
   const [result, setResult] = React.useState<any>(null);
   const environment = process.env.NEXT_PUBLIC_ENVIRONMENT as string;
   const { listenToMintingEvents } = useCrossmintEvents({

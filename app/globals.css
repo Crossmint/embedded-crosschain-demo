@@ -23,10 +23,6 @@ body {
   box-sizing: border-box;
   padding: 25px;
 }
-.connect-wrapper > div,
-.payment-wrapper > iframe {
-  width: 100%;
-}
 
 @keyframes spin {
   0% {
@@ -59,4 +55,7 @@ body {
   position: relative;
   z-index: 2;
   background: #fff;
+}
+.payment-wrapper > iframe {
+  width: 100%;
 }

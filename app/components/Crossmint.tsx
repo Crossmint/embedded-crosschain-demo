@@ -9,7 +9,6 @@ import {
   useChainId,
   useSwitchChain,
   useSendTransaction,
-  useWaitForTransactionReceipt,
 } from "wagmi";
 import Minting from "./Minting";
 
@@ -40,6 +39,9 @@ const Crossmint: React.FC<CrossmintProps> = ({
     if (method === paymentMethod) {
       baseClass += " border-indigo-500";
     }
+    if (minting) {
+      baseClass += " opacity-50 cursor-not-allowed";
+    }
     return baseClass;
   };
 
@@ -59,7 +61,7 @@ const Crossmint: React.FC<CrossmintProps> = ({
 
       case "payment:process.started":
         console.log("payment:process.started", event);
-
+        setMinting(true);
         break;
 
       case "payment:process.succeeded":
@@ -80,22 +82,21 @@ const Crossmint: React.FC<CrossmintProps> = ({
   return (
     <>
       <div className="sm:col-span-3">
+        <div className="my-5">
+          <strong>Step 2 - </strong> Choose a payment method ↓
+        </div>
         <div className="grid grid-cols-2 gap-2 mb-4">
           <button
             onClick={() => setPaymentMethod("ETH")}
             className={getButtonClass("ETH")}
+            disabled={minting}
           >
             ETH
           </button>
-          {/* <button
-            onClick={() => setPaymentMethod("SOL")}
-            className={getButtonClass("SOL")}
-          >
-            SOL
-          </button> */}
           <button
             onClick={() => setPaymentMethod("fiat")}
             className={getButtonClass("fiat")}
+            disabled={minting}
           >
             Credit Card
           </button>
