@@ -20,7 +20,7 @@ const CollectionInfo: React.FC<CollectionInfoProps> = ({
     let baseClass =
       "flex items-center justify-center bg-gray-100 px-5 py-2 shadow-sm hover:shadow-lg rounded cursor-pointer transition-shadow duration-200 border-solid border-2";
     if (chain === collectionChain) {
-      baseClass += " border-indigo-500"; // Add your active class here
+      baseClass += " border-indigo-500";
     }
     if (minting) {
       baseClass += " opacity-50 cursor-not-allowed";

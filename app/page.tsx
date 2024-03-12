@@ -49,8 +49,8 @@ const Page: React.FC = () => {
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider modalSize="compact">
-          <div className="container mx-auto max-w-4xl bg-white rounded-lg">
-            <div className="grid grid-cols-1 sm:grid-cols-6 sm:gap-12 p-12">
+          <div className="container mx-auto max-w-2xl bg-white rounded-lg">
+            <div className="grid grid-cols-1 sm:grid-cols-6 sm:gap-8 p-8">
               <Navigation />
               <CollectionInfo
                 onCollectionSelect={handleCollectionSelect}
