@@ -7,17 +7,22 @@ Setup a local environment file by using the `env.sample` as a template or simply
 > Note that the Crossmint `projectId` and `collectionId` values are **not** sensitive and can be shared to the client.
 
 ```
-NEXT_PUBLIC_PROJECT_ID="42c43e55-f92d-4b25-bc99-d8309b6e1f38"
-NEXT_PUBLIC_COLLECTION_ID="f992e52c-afaa-46d5-9fba-214754383d0c"
+NEXT_PUBLIC_PROJECT_ID=
+NEXT_PUBLIC_SOLANA_ID=
+NEXT_PUBLIC_BASE_ID=
+NEXT_PUBLIC_POLYGON_ID=
 NEXT_PUBLIC_ENVIRONMENT="staging"
+NEXT_PUBLIC_WALLET_CONNECT_ID=
 ```
+
+<Note>This demo is unique in that it supports minting from three different collections to help showcase the ability to mint with ETH on other chains. Normally, you'd only have a single collection setup. Adjust as necessary to fit your needs.</Note>
 
 Clone this repository and install dependencies:
 
 ```bash
-git clone git@github.com:Crossmint/embedded-crosschain-dynamic.git
+git clone git@github.com:Crossmint/embedded-crosschain-demo.git
 
-cd embedded-crosschain-dynamic
+cd embedded-crosschain-demo
 
 pnpm install
 ```
