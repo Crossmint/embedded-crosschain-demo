@@ -1,4 +1,4 @@
-This project demonstrates using Crossmint's embedded NFT checkout with cross-chain crypto payments. In this example ~ethers v5~ dynamic.xyz is used to connect the browser wallet.
+This project demonstrates using Crossmint's embedded NFT checkout with cross-chain crypto payments. In this example, rainbowkit v2.x is used to connect the browser wallet.
 
 ## Getting Started
 
@@ -26,8 +26,6 @@ cd embedded-crosschain-demo
 
 pnpm install
 ```
-
-Also, this demo is using a local copy of the SDK so be sure to open `package.json` and set that to match the path on your system.
 
 Run the app locally:
 
