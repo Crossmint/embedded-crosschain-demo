@@ -79,6 +79,11 @@ const Crossmint: React.FC<CrossmintProps> = ({
   const { switchChain } = useSwitchChain();
   const { data: hash, sendTransactionAsync } = useSendTransaction();
 
+  const connectedWallet =
+    collectionChain === "base" || collectionChain === "polygon"
+      ? account.address
+      : "";
+
   return (
     <>
       <div className="sm:col-span-3">
@@ -122,15 +127,20 @@ const Crossmint: React.FC<CrossmintProps> = ({
                       projectId={projectId}
                       collectionId={collectionId}
                       environment={environment}
+                      recipient={{
+                        wallet: connectedWallet,
+                      }}
                       paymentMethod="ETH"
                       signer={{
                         address: account?.address || "",
                         signAndSendTransaction: async (transaction) => {
-                          return await sendTransactionAsync({
+                          const result = await sendTransactionAsync({
                             to: transaction.to as `0x${string}`,
                             value: BigInt(transaction.value.toString()),
                             data: transaction.data as `0x${string}`,
                           });
+
+                          return result;
                         },
                         handleChainSwitch: async (chain) => {
                           console.log("handlechainswitch chain: ", chain);
