@@ -138,6 +138,7 @@ const Crossmint: React.FC<CrossmintProps> = ({
                             to: transaction.to as `0x${string}`,
                             value: BigInt(transaction.value.toString()),
                             data: transaction.data as `0x${string}`,
+                            chainId: transaction.chainId,
                           });
 
                           return result;
