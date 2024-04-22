@@ -49,7 +49,7 @@ const Crossmint: React.FC<CrossmintProps> = ({
     "arbitrum-sepolia": 421614,
     "base-sepolia": 84532,
     "ethereum-sepolia": 11155111,
-    "optimism-sepolia": 1155420,
+    "optimism-sepolia": 11155420,
     "zora-sepolia": 999999999,
   };
 
