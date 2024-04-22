@@ -9,7 +9,7 @@ interface ButtonProps {
 const getNetwork = (chain: string, env: string) => {
   switch (chain) {
     case "polygon":
-      return env === "staging" ? "mumbai" : "polygon";
+      return env === "staging" ? "amoy" : "polygon";
     case "solana":
       return env === "staging" ? "devnet" : "solana";
     case "base":
@@ -23,7 +23,7 @@ const OpenSeaButton: React.FC<ButtonProps> = ({ env, chain, token }) => {
   const subdomain = env === "staging" ? "testnets." : "";
   const network = getNetwork(chain, env);
 
-  return network === "mumbai" ? (
+  return network === "amoy" ? (
     <a
       target="_blank"
       className="block bg-[#2081e2] rounded-lg mt-3 p-3 text-white"
@@ -50,7 +50,7 @@ const ScannerButton: React.FC<ButtonProps> = ({ env, chain, token }) => {
       color = "#1554f0";
       break;
     case "polygon":
-      scannerLink = `https://mumbai.polygonscan.com/tx/${token?.txId}`;
+      scannerLink = `https://amoy.polygonscan.com/tx/${token?.txId}`;
       label = "Polygonscan";
       color = "#663399";
       break;
